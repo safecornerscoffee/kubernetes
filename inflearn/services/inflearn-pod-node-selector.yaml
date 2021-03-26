@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-1
+  labels:
+    app: pod
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: gke-coffee-cluster-default-pool-d6fcd47f-1zlx
+  containers:
+    - name: container
+      image: kubetm/app
+      ports:
+      - containerPort: 8080

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: inflearn-statefulset
+spec:
+  serviceName: inflearn-statefulset
+  replicas: 3
+  selector:
+    matchLabels:
+      type: inflearn-database
+  template:
+    metadata:
+      labels:
+        type: inflearn-database
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app
+        volumeMounts:
+        - name: volume
+          mountPath: /applog
+      terminationGracePeriodSeconds: 10
+  volumeClaimTemplates:
+  - metadata:
+      name: volume
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1G
+      storageClassName: "inflearn-storage-class"

@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: inflearn-service-lb
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: svc-shopping
+          servicePort: 8080
+      - path: /customer
+        backend:
+          serviceName: svc-customer
+          servicePort: 8080
+      - path: /order
+        backend:
+          serviceName: svc-order
+          servicePort: 8080

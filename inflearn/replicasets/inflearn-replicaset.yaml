@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      type: web
+  template:
+    metadata:
+      name: pod-1
+      label:
+        type: web
+    spec:
+      containers:
+      - name: container
+        image: kubetm/app:v1
+      terminationGracePeriodSeconds: 0
+      
