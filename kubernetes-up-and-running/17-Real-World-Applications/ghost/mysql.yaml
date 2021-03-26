@@ -1,0 +1,47 @@
+# apiVersion: extensions/v1beta1
+#kind: Deployment
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  serviceName: mysql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: database
+        image: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: ghost_db
+        ports:
+        - containerPort: 3306
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+        volumeMounts:
+        - name: database
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: database
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: mysql-storage-class
+      resources:
+        requests:
+          storage: 4Gi
