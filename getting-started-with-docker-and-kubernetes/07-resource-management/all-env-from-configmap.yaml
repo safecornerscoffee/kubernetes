@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container-env-example
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: my-container
+    image: busybox
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    args: ['tail','-f', '/dev/null']
+    envFrom:
+    - configMapRef:
+        name: log-level-configmap
+    - configMapRef:
+        name: start-k8s
+        
