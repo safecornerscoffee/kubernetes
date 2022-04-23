@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: random-generator
+  labels:
+    name: random-generator
+spec:
+  containers:
+  - name: main
+    image: k8spatterns/random-generator:1.0
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    env:
+    - name: LOG_FILE
+      value: /logs/random.log
+    ports:
+      - containerPort: 8080
+        protocol: TCP
+    volumeMounts:
+      - mountPath: /logs
+        name: log-volume
+  - name: adapter
+    image: k8spatterns/random-generator-exporter
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    env:
+    - name: LOG_FILE
+      value: /logs/random.log
+    ports:
+      - containerPort: 9889
+        protocol: TCP
+    volumeMounts:
+      - mountPath: /logs
+        name: log-volume
+  volumes:
+    - name: log-volume
+      emptyDir: {}
+

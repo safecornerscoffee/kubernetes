@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: random-generator
+  template:
+    metadata:
+      labels:
+        app: random-generator
+    spec:
+      initContainers:
+        - image: k8spatterns/random-generator:1.0
+          name: init
+          command:
+          - "java"
+          - "-classpath"
+          - "/"
+          - "RandomRunner"
+          - "/logs/random.log"
+          - "100000"
+          volumeMounts:
+            - name: log-volume
+              mountPath: /logs
+      containers:
+      - name: random-generator
+        image: k8spatterns/random-generator:1.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+          - name: LOG_FILE
+            value: /logs/random.log
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+          - name: log-volume
+            mountPath: /logs
+      volumes:
+        - name: log-volume
+          emptyDir: {}
+            
