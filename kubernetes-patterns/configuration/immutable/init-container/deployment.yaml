@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+  labels:
+    project: k8spatterns
+    pattern: ImmutableConfiguration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pattern: ImmutableConfiguration
+  template:
+    metadata:
+      labels:
+        pattern: ImmutableConfiguration
+    spec:
+      initContainers:
+        - name: init
+          image: k8spatterns/config-dev:1
+          args:
+            - "/config"
+          volumeMounts:
+            - mountPath: "/config"
+              name: config-directory
+      containers:
+      - name: demo
+        image: k8spatterns/demo:1
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        volumeMounts:
+          - mountPath: "/config"
+            name: config-directory
+    volumes:
+    - name: config-directory
+      emptyDir: {}

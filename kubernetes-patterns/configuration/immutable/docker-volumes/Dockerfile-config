@@ -1,0 +1,7 @@
+FROM scratch
+
+ARG config
+
+ADD ${config} /config/demo.properties
+
+VOLUME /config

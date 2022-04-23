@@ -1,0 +1,7 @@
+FROM busybox
+
+ARG config
+
+ADD ${config} /config-src/demo.properties
+
+ENTRYPOINT [ "sh", "-c", "cp /config-src/* $1", "--" ]

@@ -1,0 +1,12 @@
+kind: apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: random-generator-config
+data:
+  PATTERN: Configuration Resource
+  application.properties: |
+    log.file=/tmp/generator.log
+    version=1.0
+    server.port=7070
+  EXTRA_OPTIONS: "high-secure,native"
+  SEED: "1123489231"
