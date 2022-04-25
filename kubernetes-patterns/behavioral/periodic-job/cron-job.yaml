@@ -1,0 +1,26 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: random-generator
+spec:
+  schedule: "*/3 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: random-generator
+            image: k8spatterns/random-generator:1.0
+            command:
+            - "java"
+            - "RandomRunner"
+            - "/logs/random.log"
+            - "10000"
+            volumeMounts:
+              - mountPath: /logs
+                name: log-volume
+          restartPolicy: OnFailure
+          volumes:
+            - name: log-volume
+              persistentVolumeClaim:
+                claimName: random-generator-log

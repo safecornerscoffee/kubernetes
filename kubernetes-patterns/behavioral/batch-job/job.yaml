@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: random-generator-
+  labels:
+    app: random-generator
+spec:
+  completions: 5
+  parallelism: 3
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata:
+      name: random-generator
+    spec:
+      containers:
+      - name: random-generator
+        image: k8spatterns/random-generator:1.0
+        command: ["java",  "RandomRunner", "/logs/random.log", "10000"]
+        volumeMounts:
+          - mountPath: /logs
+            name: log-volume
+      restartPolicy: Never
+      volumes:
+        - name: log-volume
+          persistentVolumeClaim:
+            claimName: random-generator-log
+
+

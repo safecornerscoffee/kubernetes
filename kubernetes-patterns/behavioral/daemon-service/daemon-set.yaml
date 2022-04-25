@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+Kind: DaemonSet
+metadata:
+  name: random-refresher
+spec:
+  selector:
+    matchLabels:
+      app: random-refresher
+    template:
+      metadata:
+        labels:
+          app: random-generator
+      spec:
+        tolerations:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+        containers:
+        - name: random-generator
+          image: k8spatterns/random-generator:1.0
+          command:
+          - sh
+          - -c
+          - >-
+            while true; do
+              java RandomRunner /host_dev/random 100000;
+              sleep 30;
+            done
+          volumeMounts:
+            - mountPath: /host_dev
+              name: devices
+        volumes:
+        - name: devices
+          hostPath:
+            path: /dev
