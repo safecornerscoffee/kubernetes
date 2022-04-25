@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: random-generator
+spec:
+  containers:
+  - name: random-generator
+    image: k8spatterns/random-generator:1.0
+    env:
+      - name: WAIT_FOR_POST_START
+        value: "true"
+    lifecycle:
+      postStart:
+        exec:
+          command:
+            - sh
+            - -c
+            - sleep 30 && echo "Wake up!" > /tmp/postStart_done
+      preStop:
+        httpGet:
+          port: 8080
+          path: /shutdown
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 8080

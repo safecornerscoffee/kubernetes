@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: random-generator
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          containers:
+            image: safecornerscoffee/random-generator:1.0
+            livenessProbe:
+              httpGet:
+                path: /actuator/health
+                port: 8080
+            readinessProbe:
+              exec:
+                command: ["stat", "/opt/random-generator-ready"]
