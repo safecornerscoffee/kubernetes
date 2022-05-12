@@ -1,0 +1,13 @@
+version: '3'
+services:
+  etcd:
+    image: bitnami/etcd
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    ports:
+      - 22379:2379
+      - 22380:2380
+networks:
+  default:
+    name: etcd_test
